@@ -5,7 +5,7 @@
 {% block conteudo %}
 
 <div class="min-h-screen bg-base-200 px-4 py-10 sm:px-6 lg:px-8">
-  <form action="{{url_for('usuario.update', id=u.id)}}" method="POST" class="card mx-auto max-w-xl border border-base-300 bg-base-100 shadow-sm">
+  <form action="{{url_for('usuario.update', id=u.id)}}" method="POST" class="card mx-auto max-w-xl border border-base-300 bg-base-100 shadow-sm" enctype="multipart/form-data">
     <div class="card-body gap-5">
       <div class="mb-2">
         <h1 class="card-title text-2xl">Editar usuário</h1>
@@ -13,6 +13,10 @@
       </div>
       <label class="form-control gap-2"><span class="label-text font-medium">Nome</span><input class="input input-bordered w-full" type="text" name="nome" value="{{u.nome}}" required></label>
       <label class="form-control gap-2"><span class="label-text font-medium">E-mail</span><input class="input input-bordered w-full" type="email" name="email" value="{{u.email}}" required></label>
+      <label class="form-control gap-2">
+        <span class="label-text font-medium">Foto de perfil</span>
+        <input class="file-input file-input-bordered w-full" type="file" name="foto" accept="image/png,image/jpeg,image/webp">
+      </label>
       <label class="flex cursor-pointer items-center justify-between rounded-lg border border-base-300 p-4">
         <span><span class="block font-medium">Administrador</span><span class="text-sm text-base-content/60">Permite acessar os recursos administrativos.</span></span>
         <input type="checkbox" name="administrador" class="toggle toggle-primary" {% if u.administrador %}checked{% endif %} />

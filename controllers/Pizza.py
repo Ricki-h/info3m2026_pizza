@@ -30,7 +30,7 @@ def add():
 		nome = secure_filename(arquivo.filename)
 		extensao = arquivo.filename.split('.')[-1].lower()
 		if extensao not in EXTENSOES_PERMITIDAS:
-			flash('Formato de imagem inválido. Formatos permitidos: PNG, JPG, JPEG, WEBP.', 'error')
+			flash('Formato de imagem inválido. Formatos permitidos: PNG, JPG, JPEG, WEBP', 'error')
 			return redirect(url_for('.add'))
 
 		novo_nome = f"{uuid.uuid4().hex}.{extensao}"

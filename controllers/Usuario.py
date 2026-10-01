@@ -1,14 +1,18 @@
-from flask import render_template, request, redirect, url_for, flash, abort
+from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import Usuario
 from utils import db, lm
 from flask import Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
+import os, uuid
+
+EXTENSOES_PERMITIDAS = {'png', 'jpg', 'jpeg', 'webp'}
 
 bp_usuario = Blueprint("usuario", __name__, template_folder='templates')
 
 @bp_usuario.route('/get')
-#@login_required
+@login_required
 def get():
 	if current_user.administrador:
 		usuarios = Usuario.query.all()
@@ -23,11 +27,25 @@ def add():
 	if request.method=="GET":
 		return render_template('usuario_add.html')
 	elif request.method=="POST":
-		nome = request.form.get('nome')
+		name = request.form.get('nome')
 		email = request.form.get('email')
+
+		foto = request.files.get('foto')
+		caminho_foto = None
+		if foto and foto.filename != '':
+			nome = secure_filename(foto.filename)
+			extensao = foto.filename.split('.')[-1].lower()
+			if extensao not in EXTENSOES_PERMITIDAS:
+				flash('Formato de imagem inválido. Formatos permitidos: PNG, JPG, JPEG, WEBP.', 'error')
+				return redirect(url_for('.add'))
+			novo_nome = f'{uuid.uuid4().hex}.{extensao}'
+			caminho = os.path.join(current_app.config['UPLOAD_FOLDER'], novo_nome)
+			foto.save(caminho)
+			caminho_foto = f'uploads/{novo_nome}'
+
 		senha = generate_password_hash(request.form.get('senha'))
 		administrador = request.form.get('administrador') == 'on'
-		u = Usuario(nome, email, senha, administrador)
+		u = Usuario(nome=name, email=email, foto=caminho_foto, senha=senha, administrador=administrador)
 		db.session.add(u)
 		db.session.commit()
 		flash('Dados adicionados com sucesso', 'success')
@@ -42,6 +60,21 @@ def update(id):
 		u.nome = request.form.get('nome')
 		u.email = request.form.get('email')
 		u.administrador = request.form.get('administrador') == 'on'
+
+		foto = request.files.get('foto')
+		caminho_foto = None
+		if foto and foto.filename != '':
+			nome = secure_filename(foto.filename)
+			extensao = foto.filename.split('.')[-1].lower()
+			if extensao not in EXTENSOES_PERMITIDAS:
+				flash('Formato de imagem inválido. Formatos permitidos: PNG, JPG, JPEG, WEBP.', 'error')
+				return redirect(url_for('.add'))
+			novo_nome = f'{uuid.uuid4().hex}.{extensao}'
+			caminho = os.path.join(current_app.config['UPLOAD_FOLDER'], novo_nome)
+			foto.save(caminho)
+			caminho_foto = f'uploads/{novo_nome}'
+		
+		u.foto = caminho_foto
 		db.session.add(u)
 		db.session.commit()
 		flash('Dados atualizados com sucesso', 'success')

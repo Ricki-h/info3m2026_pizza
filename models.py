@@ -8,11 +8,13 @@ class Usuario(db.Model, UserMixin):
     email = db.Column(db.String(100))
     senha = db.Column(db.String(200))
     administrador = db.Column(db.Boolean, default=False, nullable=False)
+    foto = db.Column(db.String(500), nullable=True)
     pedidos = db.relationship("Pedido", back_populates="usuario")
 
-    def __init__(self, nome, email, senha, administrador=False):
+    def __init__(self, nome, email, foto, senha, administrador=False):
         self.nome = nome
         self.email = email
+        self.foto = foto
         self.senha = senha
         self.administrador = administrador
     

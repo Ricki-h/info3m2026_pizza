@@ -1,7 +1,0 @@
-FLASK_APP=app:app
-SECRET_KEY=sua-palavra-secreta
-DB_USERNAME=infoweb2026_SEUUSUARIO_##
-DB_PASSWORD=SUA_SENHA
-DB_HOST=fases.tech
-DB_DATABASE=infoweb2026_SEUUSUARIO_##_pizza
-DB_PORT=3308

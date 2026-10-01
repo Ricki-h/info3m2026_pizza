@@ -18,6 +18,7 @@
 			<thead>
 			<tr>
 				<th></th>
+				<th>Foto</th>
 				<th>Nome</th>
 				<th>E-mail</th>
 				<th>Tipo</th>
@@ -28,6 +29,9 @@
 			{% for u in usuarios %}
 			<tr>
 				<td>{{u.id}}</td>
+				<td>
+					{% if u.foto %}<img src="{{url_for('static', filename=u.foto)}}" alt="{{ u.foto }}" class="h-12 w-12 rounded-full object-cover">{% else %}<span class="text-sm text-base-content/50">Sem foto</span>{% endif %}
+				</td>
 				<td>{{u.nome}}</td>
 				<td>{{u.email}}</td>
 				<td><span class="badge {% if u.administrador %}badge-primary{% else %}badge-ghost{% endif %}">{% if u.administrador %}Administrador{% else %}Usuário comum{% endif %}</span></td>
